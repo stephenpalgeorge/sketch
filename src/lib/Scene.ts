@@ -7,8 +7,9 @@ export class Scene {
         this.actors = actors;
     }
 
-    add(actor: SceneObject): void {
-        this.actors.push(actor);
+    add(actor: SceneObject|Array<SceneObject>): void {
+        if (Array.isArray(actor)) actor.forEach(a => this.actors.push(a));
+        else this.actors.push(actor);
     }
 
     render() {
