@@ -14,7 +14,7 @@ export function setup(ctx: CanvasRenderingContext2D) {
     const circle_three = new Circle('three', ctx, 600, 600, 16, '#000');
     
     scene.add([circle_one, circle_two, circle_three]);
-    scene.addForce({label: "gravity", vector: new Vector(0, 2)});
+    scene.addForce("gravity", new Vector(0, 2));
 
     /** move circle_one on the x-axis */
     new Between(400, 500, 2000, (value) => circle_one.x = value as number).start();

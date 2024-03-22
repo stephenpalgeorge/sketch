@@ -21,8 +21,8 @@ export class Scene {
         return this._actors.find(actor => actor.id === id);
     }
 
-    addForce(force: Force): void {
-        this._forces.push(force);
+    addForce(label: string, vector: Vector): void {
+        this._forces.push({label, vector});
     }
 
     force(label: string): Vector|undefined {
