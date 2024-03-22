@@ -1,9 +1,9 @@
 import { SceneObject } from "./SceneObject";
+import { Vector } from "./Vector";
 
 export class Circle extends SceneObject {
     ctx: CanvasRenderingContext2D;
-    _x: number;
-    _y: number;
+    _pos: Vector;
     _radius: number;
     _fill: string|null;
     stroke: string|null;
@@ -12,8 +12,7 @@ export class Circle extends SceneObject {
         super(id);
 
         this.ctx = ctx;
-        this._x = x;
-        this._y = y;
+        this._pos = new Vector(x, y);
         this._radius = radius;
         this._fill = fill;
         this.stroke = stroke;
@@ -21,7 +20,7 @@ export class Circle extends SceneObject {
 
     draw(): void {
         const shape = new Path2D();
-        shape.arc(this._x, this._y, this._radius, 0, Math.PI * 2);
+        shape.arc(this._pos.x, this._pos.y, this._radius, 0, Math.PI * 2);
         
         if (this._fill) {
             this.ctx.fillStyle = this._fill;
@@ -32,13 +31,14 @@ export class Circle extends SceneObject {
         }
     }
 
-    set x(value: number) {
-        this._x = value;
-    }
+    set x(value: number) { this._pos = new Vector(value, this._pos.y); }
+    get x(): number { return this._pos.x; }
 
-    set y(value: number) {
-        this._y = value;
-    }
+    set y(value: number) { this._pos = new Vector(this._pos.x, value); }
+    get y(): number { return this._pos.y; }
+
+    set pos(value: Vector) { this._pos = value; }
+    get pos(): Vector { return this._pos; }
 
     set radius(r: number) {
         this._radius = r;

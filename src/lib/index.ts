@@ -1,6 +1,7 @@
 import { Circle } from "./Circle";
 import { Scene } from "./Scene";
-import { Between } from "./Between";
+import { Vector } from "./Vector";
+import { Between, BetweenVectors } from "./Between";
 import { background } from "./utils/background";
 
 export const scene: Scene = new Scene();
@@ -15,14 +16,11 @@ export function setup(ctx: CanvasRenderingContext2D) {
     scene.add([circle_one, circle_two, circle_three]);
 
     /** move circle_one on the x-axis */
-    new Between(400, 500, 2000, (value) => circle_one.x = value).start();
-    /** move circle_two on __both__ axis */
-    new Between(200, 400, 3000, (value) => {
-        circle_two.y = value;
-        circle_two.x = value;
-    }).start();
+    new Between(400, 500, 2000, (value) => circle_one.x = value as number).start();
+    /** move circle_two on __both__ axis, using vectors */
+    new BetweenVectors(circle_two.pos, new Vector(400, 400), 3000, (value) => circle_two.pos = value as Vector).start();
     /** animate the radius of circle_three */
-    new Between(16, 32, 1800, (value) => circle_three.radius = value).start();
+    new Between(16, 32, 1800, (value) => circle_three.radius = value as number  ).start();
 
     draw(ctx);
 }
