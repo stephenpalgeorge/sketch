@@ -3,16 +3,14 @@ import { Vector } from "./Vector";
 
 export class Circle extends SceneObject {
     ctx: CanvasRenderingContext2D;
-    _pos: Vector;
     _radius: number;
     _fill: string|null;
     stroke: string|null;
 
     constructor(id: string, ctx: CanvasRenderingContext2D, x: number, y: number, radius: number, fill: string | null = null, stroke: string | null = null) {
-        super(id);
+        super(id, new Vector(x, y));
 
         this.ctx = ctx;
-        this._pos = new Vector(x, y);
         this._radius = radius;
         this._fill = fill;
         this.stroke = stroke;
