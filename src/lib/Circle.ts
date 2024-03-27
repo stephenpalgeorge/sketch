@@ -38,9 +38,8 @@ export class Circle extends SceneObject {
     set pos(value: Vector) { this._pos = value; }
     get pos(): Vector { return this._pos; }
 
-    set radius(r: number) {
-        this._radius = r;
-    }
+    set radius(r: number) { this._radius = r; }
+    get radius(): number { return this._radius; }
 
     set fill(color: string) {
         this._fill = color;

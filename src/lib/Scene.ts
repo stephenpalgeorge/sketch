@@ -1,5 +1,5 @@
 import { SceneObject } from "./SceneObject";
-import type { Vector } from './Vector';
+import { Vector } from './Vector';
 
 type Force = { label: string, vector: Vector };
 
@@ -12,6 +12,10 @@ export class Scene {
         this._ctx = ctx;
         this._actors = actors;
         this._forces = [];
+    
+        this._ctx.canvas.addEventListener('click', (event: MouseEvent) => {
+
+        });
     }
 
     add(actor: SceneObject|Array<SceneObject>): void {
@@ -41,7 +45,7 @@ export class Scene {
         this._actors.forEach(actor => actor.pos.add(targetForce.vector));
     }
 
-    render() {
+    render(): void {
         this._actors.forEach(actor => actor.draw());
     }
 
@@ -51,6 +55,10 @@ export class Scene {
 
     remove(event: string, callback: EventListenerOrEventListenerObject): void {
         this._ctx.canvas.removeEventListener(event, callback);
+    }
+
+    mouse(event: MouseEvent): Vector {
+        return new Vector(event.clientX - this._ctx.canvas.offsetLeft, event.clientY - this._ctx.canvas.offsetTop);
     }
 
     get actors(): Array<SceneObject> { return this.actors; }
