@@ -4,10 +4,12 @@ import type { Vector } from './Vector';
 type Force = { label: string, vector: Vector };
 
 export class Scene {
+    _ctx: CanvasRenderingContext2D;
     _actors: Array<SceneObject>;
     _forces: Array<Force>;
 
-    constructor(actors: Array<SceneObject> = []) {
+    constructor(ctx: CanvasRenderingContext2D, actors: Array<SceneObject> = []) {
+        this._ctx = ctx;
         this._actors = actors;
         this._forces = [];
     }
@@ -41,6 +43,14 @@ export class Scene {
 
     render() {
         this._actors.forEach(actor => actor.draw());
+    }
+
+    on(event: string, callback: EventListenerOrEventListenerObject): void {
+        this._ctx.canvas.addEventListener(event, callback);
+    }
+
+    remove(event: string, callback: EventListenerOrEventListenerObject): void {
+        this._ctx.canvas.removeEventListener(event, callback);
     }
 
     get actors(): Array<SceneObject> { return this.actors; }
