@@ -3,9 +3,9 @@ import { Vector } from "./Vector";
 type OnTickFunc = (value: number|Vector) => void;
 
 abstract class TweenTemplate {
-    _time: number | null;
-    _duration: number;
-    _onTick: OnTickFunc;
+    private _time: number | null;
+    private _duration: number;
+    private _onTick: OnTickFunc;
 
     constructor(duration: number, onTick: OnTickFunc) {
         this._time = null;
@@ -15,6 +15,15 @@ abstract class TweenTemplate {
 
     abstract animate(timestamp: number): void;
     abstract start(): void;
+
+    get duration(): number { return this._duration; }
+    set duration(value: number) { this._duration = value; }
+
+    get onTick(): OnTickFunc { return this._onTick; }
+    set onTick(callback: OnTickFunc) { this._onTick = callback; }
+
+    get time(): number|null { return this._time; }
+    set time(value: number|null) { this._time = value; }
 }
 
 export class Between extends TweenTemplate {
@@ -23,17 +32,17 @@ export class Between extends TweenTemplate {
 
     constructor(start: number, end: number, duration: number, onTick: OnTickFunc) {
         super(duration, onTick);
-        this._time = null;
+        this.time = null;
         this._start = start;
         this._end = end;
     }
 
     animate(timestamp: number): void {
-        if (!this._time) this._time = timestamp;
-        const progress: number = Math.min((timestamp - this._time) / this._duration, 1);
+        if (!this.time) this.time = timestamp;
+        const progress: number = Math.min((timestamp - this.time) / this.duration, 1);
         const interpolatedValue: number = this._start + ((this._end - this._start) * progress);
 
-        this._onTick(interpolatedValue);
+        this.onTick(interpolatedValue);
 
         if (progress < 1) {
             requestAnimationFrame(this.animate.bind(this));
@@ -56,13 +65,13 @@ export class BetweenVectors extends TweenTemplate {
     }
 
     animate(timestamp: number): void {
-        if (!this._time) this._time = timestamp;
+        if (!this.time) this.time = timestamp;
 
-        const progress: number = Math.min((timestamp - this._time) / this._duration, 1);
+        const progress: number = Math.min((timestamp - this.time) / this.duration, 1);
         const interpolated_x: number = this._start.x + ((this._end.x - this._start.x) * progress);
         const interpolated_y: number = this._start.y + ((this._end.y - this._start.y) * progress);
 
-        this._onTick(new Vector(interpolated_x, interpolated_y));
+        this.onTick(new Vector(interpolated_x, interpolated_y));
 
         if (progress < 1) {
             requestAnimationFrame(this.animate.bind(this));

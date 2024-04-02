@@ -1,21 +1,36 @@
 import { SceneObject } from "./SceneObject";
 import { Vector } from './Vector';
 
-type Force = { label: string, vector: Vector };
+interface SceneOptions {
+    clickEvents: boolean,
+}
+
+const defaultOptions: SceneOptions = {
+    clickEvents: true,
+}
 
 export class Scene {
-    _ctx: CanvasRenderingContext2D;
-    _actors: Array<SceneObject>;
-    _forces: Array<Force>;
+    private _ctx: CanvasRenderingContext2D;
+    private _actors: Array<SceneObject>;
+    private _forces: Map<string, Vector>;
+    options: SceneOptions;
 
-    constructor(ctx: CanvasRenderingContext2D, actors: Array<SceneObject> = []) {
+    constructor(ctx: CanvasRenderingContext2D, options?: SceneOptions) {
         this._ctx = ctx;
-        this._actors = actors;
-        this._forces = [];
-    
-        this._ctx.canvas.addEventListener('click', (event: MouseEvent) => {
+        this._actors = [];
+        this._forces = new Map();
+        this.options = Object.assign(defaultOptions, options);
 
-        });
+        if (this.options.clickEvents) {
+            this.ctx.canvas.addEventListener('click', (event) => {
+                this.actors.forEach(actor => {
+                    const mouse = this.mouse(event);
+                    if (actor.contains(mouse)) {
+                        document.dispatchEvent(new Event(`click:${actor.id}`));
+                    }
+                });
+            });
+        }
     }
 
     add(actor: SceneObject|Array<SceneObject>): void {
@@ -28,21 +43,21 @@ export class Scene {
     }
 
     addForce(label: string, vector: Vector): void {
-        this._forces.push({label, vector});
+        if (!this.forces.get(label)) this._forces.set(label, vector);
     }
 
     force(label: string): Vector|undefined {
-        return this._forces.find(force => force.label === label)?.vector;
+        return this.forces.get(label);
     }
 
     apply(force: string): void {
-        const targetForce: Force|undefined = this._forces.find(f => f.label === force);
+        const targetForce: Vector|undefined = this.forces.get(force);
         if (!targetForce) {
             console.error(`Force Undefined: no force has been added to the scene with label "${force}"`);
             return
         }
 
-        this._actors.forEach(actor => actor.pos.add(targetForce.vector));
+        this._actors.forEach(actor => actor.pos.add(targetForce));
     }
 
     render(): void {
@@ -61,6 +76,7 @@ export class Scene {
         return new Vector(event.clientX - this._ctx.canvas.offsetLeft, event.clientY - this._ctx.canvas.offsetTop);
     }
 
-    get actors(): Array<SceneObject> { return this.actors; }
-    get forces(): Array<Force> { return this._forces; }
+    get actors(): Array<SceneObject> { return this._actors; }
+    get forces(): Map<string, Vector> { return this._forces; }
+    get ctx(): CanvasRenderingContext2D { return this._ctx; }
 }

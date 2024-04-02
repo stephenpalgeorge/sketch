@@ -20,17 +20,19 @@ export function setup(ctx: CanvasRenderingContext2D) {
     scene.addForce("gravity", new Vector(0, 2));
 
     /** move circle_one on the x-axis */
-    new Between(400, 500, 2000, (value) => circle_one.x = value as number);
+    const fly = new Between(400, 500, 2000, (value) => circle_one.x = value as number);
     /** move circle_two on __both__ axis, using vectors */
     new BetweenVectors(circle_two.pos, new Vector(400, 0), 3000, (value) => circle_two.pos = value as Vector);
     /** animate the radius of circle_three */
-    new Between(16, 32, 1800, (value) => circle_three.radius = value as number);
+    const grow = new Between(16, 32, 1800, (value) => circle_three.radius = value as number);
 
     scene.on('click', (event) => {
         const mouse = scene.mouse(event as MouseEvent);
-        console.log(mouse.distance(circle_one.pos), circle_one.radius);
         if (mouse.distance(circle_one.pos) < circle_one.radius) console.log(mouse);
     });
+
+    circle_one.click(() => fly.start());
+    circle_three.click(() => grow.start());
 
     draw(ctx);
 }
