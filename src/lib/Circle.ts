@@ -1,13 +1,29 @@
 import { SceneObject } from "./SceneObject";
 import { Vector } from "./Vector";
 
+interface StrokeOptions {
+    color: string,
+    thickness?: number,
+}
+
 export class Circle extends SceneObject {
     private _ctx: CanvasRenderingContext2D;
     private _radius: number;
     private _fill: string|null;
-    private stroke: string|null;
+    private stroke: StrokeOptions|null;
 
-    constructor(id: string, ctx: CanvasRenderingContext2D, x: number, y: number, radius: number, fill: string | null = null, stroke: string | null = null) {
+    /**
+     * 
+     * @param id {string} a unique identifier for the Circle
+     * @param ctx {CanvasRenderingContext2D} the context that the Circle should be drawn to
+     * @param x {number} the x position of the Circle's center
+     * @param y {number} the y position of the Circle's center
+     * @param radius {number} the distance from the Circle's center to its circumference
+     * @param fill {string|null} any valid CSS color for colouring in the Circle
+     * @param stroke {StrokeOptions|null} any valid CSS color for the Circle's outline
+     * 
+     */
+    constructor(id: string, ctx: CanvasRenderingContext2D, x: number, y: number, radius: number, fill: string | null = null, stroke: StrokeOptions | null = null) {
         super(id, new Vector(x, y));
 
         this._ctx = ctx;
@@ -23,12 +39,22 @@ export class Circle extends SceneObject {
         if (this._fill) {
             this.ctx.fillStyle = this._fill;
             this.ctx.fill(shape);
-        } else if (this.stroke) {
-            this.ctx.strokeStyle = this.stroke;
+        }
+        
+        if (this.stroke) {
+            this.ctx.strokeStyle = this.stroke.color;
+            if (this.stroke.thickness) this.ctx.lineWidth = this.stroke.thickness;
             this.ctx.stroke(shape);
         }
     }
 
+    /**
+     * 
+     * Check if a given vector is contained within the bounds of the Circle
+     * 
+     * @param target {Vector}
+     * @returns boolean
+     */
     contains(target: Vector): boolean {
         return target.distance(this.pos) <= this.radius;
     }

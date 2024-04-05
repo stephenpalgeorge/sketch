@@ -7,15 +7,12 @@
     let canvas: HTMLCanvasElement;
     
     onMount(() => {
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-    
-        setup(ctx);
+        setup();
     });
 </script>
 
 <main>
-    <canvas bind:this={canvas} width="800" height="800">
+    <canvas id="sketch-canvas" bind:this={canvas} width="800" height="800">
         Canvas not supported
     </canvas>
 </main>

@@ -30,6 +30,13 @@ export class Between extends TweenTemplate {
     _start: number;
     _end: number;
 
+    /**
+     * 
+     * @param start {number} the initial/minimum value
+     * @param end {number} the target/final/maximum value
+     * @param duration {number} the number of milliseconds the tween should last for
+     * @param onTick {OnTickFunc} the callback function that runs on every frame of animation
+     */
     constructor(start: number, end: number, duration: number, onTick: OnTickFunc) {
         super(duration, onTick);
         this.time = null;
@@ -37,6 +44,10 @@ export class Between extends TweenTemplate {
         this._end = end;
     }
 
+    /**
+     * 
+     * @param timestamp stores the 'start' time of the tween, so we can calculate how long it's been going for
+     */
     animate(timestamp: number): void {
         if (!this.time) this.time = timestamp;
         const progress: number = Math.min((timestamp - this.time) / this.duration, 1);
@@ -58,16 +69,32 @@ export class BetweenVectors extends TweenTemplate {
     _start: Vector;
     _end: Vector;
     
+    /**
+     * 
+     * @param start {number} the initial/minimum value
+     * @param end {number} the target/final/maximum value
+     * @param duration {number} the number of milliseconds the tween should last for
+     * @param onTick {OnTickFunc} the callback function that runs on every frame of animation
+     */
     constructor(start: Vector, end: Vector, duration: number, onTick: OnTickFunc) {
         super(duration, onTick);
         this._start = start;
         this._end = end;
     }
 
+    /**
+     * 
+     * @param timestamp stores the 'start' time of the tween, so we can calculate how long it's been going for
+     */
     animate(timestamp: number): void {
         if (!this.time) this.time = timestamp;
 
         const progress: number = Math.min((timestamp - this.time) / this.duration, 1);
+        /**
+         * 
+         * compared to the `animate` function in the `Between` class above, as we are tweening between two vectors,
+         * we now need to calculate two interpolated values, one for `x` and one for `y`
+         */
         const interpolated_x: number = this._start.x + ((this._end.x - this._start.x) * progress);
         const interpolated_y: number = this._start.y + ((this._end.y - this._start.y) * progress);
 

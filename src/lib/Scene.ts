@@ -2,7 +2,7 @@ import { SceneObject } from "./SceneObject";
 import { Vector } from './Vector';
 
 interface SceneOptions {
-    clickEvents: boolean,
+    clickEvents?: boolean,
 }
 
 const defaultOptions: SceneOptions = {
@@ -34,12 +34,12 @@ export class Scene {
     }
 
     add(actor: SceneObject|Array<SceneObject>): void {
-        if (Array.isArray(actor)) actor.forEach(a => this._actors.push(a));
-        else this._actors.push(actor);
+        if (Array.isArray(actor)) actor.forEach(a => this.actors.push(a));
+        else this.actors.push(actor);
     }
 
     get(id: string): SceneObject|undefined {
-        return this._actors.find(actor => actor.id === id);
+        return this.actors.find(actor => actor.id === id);
     }
 
     addForce(label: string, vector: Vector): void {
@@ -57,11 +57,11 @@ export class Scene {
             return
         }
 
-        this._actors.forEach(actor => actor.pos.add(targetForce));
+        this.actors.forEach(actor => actor.pos.add(targetForce));
     }
 
     render(): void {
-        this._actors.forEach(actor => actor.draw());
+        this.actors.forEach(actor => actor.draw());
     }
 
     on(event: string, callback: EventListenerOrEventListenerObject): void {

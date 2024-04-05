@@ -7,9 +7,14 @@ export abstract class SceneObject {
     constructor(id: string, pos: Vector) {
         this._id = id;
         this._pos = pos;
-
     }
 
+    /**
+     * 
+     * @see `Scene` constructor for dispatch of events
+     * 
+     * @param callback {EventListenerOrEventListenerObject} the callback to run on click
+     */
     click(callback: EventListenerOrEventListenerObject): void {
         document.addEventListener(`click:${this.id}`, callback);
     }
