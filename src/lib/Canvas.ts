@@ -50,4 +50,8 @@ export class Canvas {
     set element(canvas: HTMLCanvasElement | null) { this._element = canvas; }
 
     get context(): CanvasRenderingContext2D | null { return this._context; }
+
+    get width(): number { return this.element?.width || 0; }
+
+    get height(): number { return this.element?.height || 0; }
 }

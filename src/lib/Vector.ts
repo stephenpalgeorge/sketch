@@ -1,6 +1,6 @@
 export class Vector {
-    _x: number;
-    _y: number;
+    private _x: number;
+    private _y: number;
 
     /**
      * 
