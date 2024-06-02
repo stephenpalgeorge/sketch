@@ -12,13 +12,60 @@ export class Vector {
         this._y = y;
     }
 
+    limit(value: number): Vector {
+        const maximal: number = Math.max(Math.abs(this.x), Math.abs(this.y));
+        if (maximal <= value) return new Vector(this.x, this.y);
+        
+        const scale: number = value / maximal;
+        return new Vector(this.x * scale, this.y * scale);
+    }
+
     /**
      * 
      * @param vector {Vector}
      */
     add(vector: Vector): void {
-        this._x = this._x + vector.x;
-        this._y = this._y + vector.y;
+        this.x = this.x + vector.x;
+        this.y = this.y + vector.y;
+    }
+
+    static add(origin: Vector, target: Vector): Vector {
+        return new Vector(origin.x + target.x, origin.y + target.y);
+    }
+
+    subtract(vector: Vector): void {
+        this.x = this.x - vector.x;
+        this.y = this.y - vector.y;
+    }
+
+    static subtract(origin: Vector, target: Vector): Vector {
+        return new Vector(origin.x - target.x, origin.y - target.y);
+    }
+
+    mult(target: Vector|number): Vector {
+        let x, y;
+        if (typeof target === 'number') {
+            x = this.x * target;
+            y = this.y * target;
+        } else {
+            x = this.x * target.x;
+            y = this.y * target.y;
+        }
+
+        return new Vector(x, y);
+    }
+
+    static mult(origin: Vector, target: Vector|number): Vector {
+        let x, y;
+        if (typeof target === 'number') {
+            x = origin.x + target;
+            y = origin.y + target;
+        } else {
+            x = origin.x + target.x;
+            y = origin.y + target.y;
+        }
+
+        return new Vector(x, y);
     }
 
     /**

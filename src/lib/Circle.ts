@@ -10,6 +10,7 @@ export class Circle extends SceneObject {
     private _ctx: CanvasRenderingContext2D;
     private _radius: number;
     private _fill: string|null;
+    private _forces: Array<Vector>;
     private stroke: StrokeOptions|null;
 
     /**
@@ -29,10 +30,26 @@ export class Circle extends SceneObject {
         this._ctx = ctx;
         this._radius = radius;
         this._fill = fill;
+        this._forces = [];
         this.stroke = stroke;
     }
 
+    constrain(vector: Vector): Vector {
+        if (this.limit) {
+            const maximal: number = Math.max(Math.abs(vector.x), Math.abs(vector.y));
+
+            if (maximal < this.limit) return vector;
+
+            const scalingFactor: number = this.limit / maximal;
+            return new Vector(vector.x * scalingFactor, vector.y * scalingFactor);
+        } else return vector;
+    }
+
     draw(): void {
+        if (this._forces.length > 0) this._forces.forEach(force => this.vel.add(force));
+        this.vel = this.constrain(this.vel);
+        this.pos.add(this.vel);
+
         const shape = new Path2D();
         shape.arc(this.pos.x, this.pos.y, this._radius, 0, Math.PI * 2);
         
@@ -46,6 +63,10 @@ export class Circle extends SceneObject {
             if (this.stroke.thickness) this.ctx.lineWidth = this.stroke.thickness;
             this.ctx.stroke(shape);
         }
+    }
+
+    apply(vec: Vector): void {
+        this._forces.push(vec);
     }
 
     /**
